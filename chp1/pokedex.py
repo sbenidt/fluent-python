@@ -1,4 +1,4 @@
-"""Code to illustrate python data model by creating a pokedex class"""
+"""Code to illustrate the power of the python data model by creating a pokedex class"""
 
 import collections
 from random import choice
@@ -39,10 +39,10 @@ if __name__ == "__main__":
     # By implementing __len__ the pokedex has a length
     len(dex)
 
-    # Look up the 121st pokemon
+    # Can look up the 121st pokemon since __getitem__ is implemented
     dex[121]
 
-    # slicing is supported
+    # slicing is also supported
     dex[120:130]
 
     # Can sort the pokedex
@@ -51,13 +51,16 @@ if __name__ == "__main__":
     # sort by height, then weight
     sorted(dex, key=lambda x: (x.height, x.weight))
 
-    # can reverse sort
+    # can also reverse sort
     list(reversed(dex))
 
-    # Select random pokemon
+    ### Other python libraries play nicely with the
+    # Pokedex Class with just two magic methods of the
+    # python data model api being implemented
+    ### Select a random pokemon
     choice(dex)
 
-    # containment is implemented
+    # containment is also already implemented
     onix = Pokemon(
         name='Onix',
         number='95',
