@@ -1,6 +1,7 @@
 """Code to illustrate python data model by creating a pokedex class"""
 
 import collections
+from random import choice
 
 # Create Pokemon Class
 Pokemon = collections.namedtuple(
@@ -30,14 +31,38 @@ class Pokedex:
             return self._pokemon[position - 1]
 
 
-# Create a dex
-dex = Pokedex()
+if __name__ == "__main__":
 
-# By implementing __len__ the pokedex has a length
-len(dex)
+    # Create a dex
+    dex = Pokedex()
 
-# Look up the 121st pokemon
-dex[121]
+    # By implementing __len__ the pokedex has a length
+    len(dex)
 
-# slicing is supported
-dex[120:130]
+    # Look up the 121st pokemon
+    dex[121]
+
+    # slicing is supported
+    dex[120:130]
+
+    # Can sort the pokedex
+    sorted(dex)
+
+    # sort by height, then weight
+    sorted(dex, key=lambda x: (x.height, x.weight))
+
+    # can reverse sort
+    list(reversed(dex))
+
+    # Select random pokemon
+    choice(dex)
+
+    # containment is implemented
+    onix = Pokemon(
+        name='Onix',
+        number='95',
+        type1='rock',
+        type2='ground',
+        height='8.8',
+        weight='210.0')
+    onix in dex
