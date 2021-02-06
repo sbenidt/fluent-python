@@ -4,11 +4,6 @@ import collections
 Pokemon = collections.namedtuple(
     "Pokemon", ["name", "number", "type1", "type2", "height", "weight"])
 
-with open("pokemon_1st_gen.csv") as filen:
-    pokemon_data = filen.read()
-    pokemon_data = pokemon_data.splitlines()
-
-
 # Create Pokedex Class
 class Pokedex:
     def __init__(self):
