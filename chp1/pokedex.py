@@ -11,11 +11,21 @@ Pokemon = collections.namedtuple(
 # Create Pokedex Class
 class Pokedex:
     def __init__(self):
-        with open("pokemon_1st_gen.csv") as filen:
+        with open("pokemon_1st_gen_cleaned.csv") as filen:
             pokemon_data = filen.read()
             # skip header row
             pokemon_data = pokemon_data.splitlines()[1:]
-        self._pokemon = [Pokemon(*row.split(',')) for row in pokemon_data]
+        self._pokemon = []
+        for row in pokemon_data:
+            row = row.split(',')
+            pokemon = Pokemon(
+                name=row[0],
+                number=int(row[1]),
+                type1=row[2],
+                type2=row[3],
+                height=float(row[4]),
+                weight=float(row[5]))
+            self._pokemon.append(pokemon)
 
     def __len__(self):
         return len(self._pokemon)
@@ -63,9 +73,13 @@ if __name__ == "__main__":
     # containment is also already implemented
     onix = Pokemon(
         name='Onix',
-        number='95',
+        number=95,
         type1='rock',
         type2='ground',
-        height='8.8',
-        weight='210.0')
+        height=8.8,
+        weight=210.0)
     onix in dex
+
+    # Can iterate over the pokdex
+    for pokemon in dex:
+        print(pokemon)
