@@ -11,7 +11,10 @@ Pokemon = collections.namedtuple(
 
 # Create Pokedex Class
 class Pokedex:
-    """The Pokedex Class implements the 1st Gen Pokedex from Pokemon Red/Blue/Yellow"""
+    """The Pokedex Class implements the 1st Gen Pokedex from Pokemon Red/Blue/Yellow
+    and keep track of pokemon either not seen, seen, or caught
+
+    """
     def __init__(self):
         with open("pokemon_1st_gen_cleaned.csv") as filen:
             pokemon_data = filen.read()
@@ -28,48 +31,6 @@ class Pokedex:
                                    weight=float(row[5]),
                                    catch_status="Not_Seen")
             self._pokemon.append(pokemon_iter)
-
-    def __len__(self):
-        """Get length of Pokedex Class"""
-        return len(self._pokemon)
-
-    def __getitem__(self, item):
-        """Look up pokemon by position, slices, or name"""
-
-        # Support pokedex incides starting with 1 instead of 0
-        if isinstance(item, slice):
-            start = item.start - 1
-            stop = item.stop - 1
-            step = item.step
-            return self._pokemon[slice(start, stop, step)]
-        elif isinstance(item, str):
-            # Support pokemon lookup by name
-            position = self._get_position(item)
-        else:
-            position = item
-        return self._pokemon[position - 1]
-
-    def _get_position(self, name):
-        """Get pokemon number given pokemon name
-
-        Parameters:
-        ----------
-        name: str,
-            name of 1st Gen Pokemon
-
-        Returns:
-        -------
-        number: int,
-            pokemon's pokedex number
-        """
-        position_list = [
-            pokemon.number for pokemon in self._pokemon
-            if pokemon.name.lower() == name.lower()
-        ]
-        if len(position_list) == 0:
-            raise ValueError("Pokemon Name not in Pokedex")
-        else:
-            return position_list[0]
 
     def seen(self, name):
         """Change catch status of Pokemon to Seen if not already Caught
@@ -110,8 +71,51 @@ class Pokedex:
         self._pokemon[position - 1] = new_pokemon
         print(f"{self[position].name} has been Caught")
 
-    def evaluate(self):
-        """Evaluate your Pokedex"""
+    def __len__(self):
+        """Get length of Pokedex Class"""
+        return len(self._pokemon)
+
+    def __getitem__(self, item):
+        """Look up pokemon by position, slices, or name"""
+        if isinstance(item, slice):
+            # Support Slicing
+            # Support pokedex incides starting with 1 instead of 0
+            start = item.start - 1
+            stop = item.stop - 1
+            step = item.step
+            return self._pokemon[slice(start, stop, step)]
+        elif isinstance(item, str):
+            # Support pokemon lookup by name
+            position = self._get_position(item)
+        else:
+            position = item
+        # Support pokedex incides starting with 1 instead of 0
+        return self._pokemon[position - 1]
+
+    def _get_position(self, name):
+        """Get pokemon number given pokemon name
+
+        Parameters:
+        ----------
+        name: str,
+            name of 1st Gen Pokemon
+
+        Returns:
+        -------
+        number: int,
+            pokemon's pokedex number
+        """
+        position_list = [
+            pokemon.number for pokemon in self._pokemon
+            if pokemon.name.lower() == name.lower()
+        ]
+        if len(position_list) == 0:
+            raise ValueError("Pokemon Name not in Pokedex")
+        else:
+            return position_list[0]
+
+    def _evaluate(self):
+        """Evaluate your Pokedex. Prints a message indicating number of pokemon seen and caught"""
         num_caught = len([
             pokemon for pokemon in self._pokemon
             if pokemon.catch_status == 'Caught'
@@ -121,14 +125,14 @@ class Pokedex:
             if pokemon.catch_status == 'Seen'
         ])
         num_seen += num_caught
-        print("\n")
-        print(
-            "Good to see you! How is your Pokédex coming? Here, let me take a look!"
-        )
-        print("\n")
-        print("Professor Oak's Pokedex Evaluation:")
-        print(f"Number of Pokemon Seen: {num_seen}")
-        print(f"Number of Pokemon Caught: {num_caught}")
+        # print("\n")
+        # print(
+        #     "Good to see you! How is your Pokédex coming? Here, let me take a look!"
+        # )
+        # print("\n")
+        # print("Professor Oak's Pokedex Evaluation:")
+        # print(f"Number of Pokemon Seen: {num_seen}")
+        # print(f"Number of Pokemon Caught: {num_caught}")
 
         message_list = [
             "You still have lots to do. Look for Pokémon in grassy areas!",
@@ -151,14 +155,29 @@ class Pokedex:
 
         message_index = num_caught // 10
         message = message_list[message_index]
-        print("\n")
-        print(message)
+        # print("\n")
+        # print(message)
+        print_message_list = [
+            "\n",
+            "Good to see you! How is your Pokédex coming? Here, let me take a look!",
+            "\n", "Professor Oak's Pokedex Evaluation:", "\n",
+            f"Number of Pokemon Seen: {num_seen}", "\n",
+            f"Number of Pokemon Caught: {num_caught}", "\n", message
+        ]
+        print_message = "".join(print_message_list)
+        return print_message
+
+    def __repr__(self):
+        return self._evaluate()
 
 
 if __name__ == "__main__":
 
     # Create a dex
     dex = Pokedex()
+
+    # Check out the repr message for the class
+    dex
 
     # By implementing __len__ the pokedex has a length
     len(dex)
@@ -167,32 +186,19 @@ if __name__ == "__main__":
     dex[121]
 
     # slicing is also supported
-    dex[120:130]
+    dex[120:125]
 
     # Look Up Pokemon by Name
     dex["Squirtle"]
 
     # Can sort the pokedex
-    sorted(dex)
+    sorted(dex)[:5]
 
     # sort by height, then weight
-    sorted(dex, key=lambda x: (x.height, x.weight))
+    sorted(dex, key=lambda x: (x.height, x.weight))[:5]
 
-    ### Other python libraries play nicely with the
-    # Pokedex Class with just two magic methods of the
-    # python data model api being implemented
-    ### Select a random pokemon
+    # Select a random pokemon
     choice(dex)
-
-    # containment is also already implemented
-    onix = Pokemon(name='Onix',
-                   number=95,
-                   type1='rock',
-                   type2='ground',
-                   height=8.8,
-                   weight=210.0,
-                   catch_status='Not_Seen')
-    print(onix in dex)
 
     # Can iterate over the pokedex
     for pokemon in dex:
@@ -207,4 +213,4 @@ if __name__ == "__main__":
     [pokemon for pokemon in dex if pokemon.catch_status == 'Caught']
 
     # Evaluate your Pokedex
-    dex.evaluate()
+    dex
