@@ -115,7 +115,7 @@ class Pokedex:
             return position_list[0]
 
     def _evaluate(self):
-        """Evaluate your Pokedex. Prints a message indicating number of pokemon seen and caught"""
+        """Evaluate your Pokedex. Returns a message indicating number of pokemon seen and caught"""
         num_caught = len([
             pokemon for pokemon in self._pokemon
             if pokemon.catch_status == 'Caught'
@@ -125,14 +125,6 @@ class Pokedex:
             if pokemon.catch_status == 'Seen'
         ])
         num_seen += num_caught
-        # print("\n")
-        # print(
-        #     "Good to see you! How is your Pokédex coming? Here, let me take a look!"
-        # )
-        # print("\n")
-        # print("Professor Oak's Pokedex Evaluation:")
-        # print(f"Number of Pokemon Seen: {num_seen}")
-        # print(f"Number of Pokemon Caught: {num_caught}")
 
         message_list = [
             "You still have lots to do. Look for Pokémon in grassy areas!",
@@ -155,8 +147,6 @@ class Pokedex:
 
         message_index = num_caught // 10
         message = message_list[message_index]
-        # print("\n")
-        # print(message)
         print_message_list = [
             "\n",
             "Good to see you! How is your Pokédex coming? Here, let me take a look!",
